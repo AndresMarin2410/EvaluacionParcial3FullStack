@@ -1,5 +1,4 @@
-package cl.EvaluacionParcial3.MicroService_Usuario.Dto;
-
+package cl.EvaluacionParcial3.MicroService_Categoria.Dto;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -11,12 +10,11 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class UsuarioResponse {
+public class CategoriaResponse {
     private Long id;
-    private String run;
     private String nombre;
-    private String apellido;
-    private LocalDateTime fechaNac;
-    private String correo;
-    private String direccion;
+    private String descripcion;
+    private Boolean estado;
+    private LocalDateTime fechaCreacion;
+
 }
