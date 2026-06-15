@@ -1,0 +1,30 @@
+spring:
+  application:
+    name: MicroService-Reporte
+
+  datasource:
+    url: jdbc:mysql://localhost:3306/db_reporte
+    username: root
+    password:
+
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+        dialect: org.hibernate.dialect.MySQLDialect
+
+  flyway:
+    enabled: true
+
+server:
+  port: 8090
+
+springdoc:
+  api-docs:
+    enabled: true
+  swagger-ui:
+    enabled: true
+    path: /reporte/swagger-ui.html

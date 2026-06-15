@@ -30,5 +30,4 @@ public class UsuarioMapper {
                 .direccion(usuario.getDireccion())
                 .build();
     }
-
 }
