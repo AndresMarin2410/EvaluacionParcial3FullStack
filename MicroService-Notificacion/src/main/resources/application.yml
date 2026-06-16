@@ -1,15 +1,12 @@
-server:
-  port: 8085
-
 spring:
   application:
-    name: MicroService-Carrito
-  
+    name: MicroService-Notificacion
+
   datasource:
-    url: jdbc:mysql://localhost:3306/db_carrito
+    url: jdbc:mysql://localhost:3306/db_notificacion
     username: root
     password:
-  
+
   jpa:
     hibernate:
       ddl-auto: validate
@@ -18,13 +15,16 @@ spring:
       hibernate:
         format_sql: true
         dialect: org.hibernate.dialect.MySQLDialect
-  
+
   flyway:
     enabled: true
+
+server:
+  port: 8089
 
 springdoc:
   api-docs:
     enabled: true
   swagger-ui:
     enabled: true
-    path: /carrito/swagger-ui.html
+    path: /notificacion/swagger-ui.html
