@@ -15,7 +15,12 @@ import org.springframework.web.bind.annotation.RestController;
 import cl.EvaluacionParcial3.MicroService_Carrito.dto.CarritoRequest;
 import cl.EvaluacionParcial3.MicroService_Carrito.dto.CarritoResponse;
 import cl.EvaluacionParcial3.MicroService_Carrito.service.CarritoService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import jakarta.validation.Valid;
+
+
 
 @RestController
 @RequestMapping("/api/carrito")
@@ -24,6 +29,13 @@ public class CarritoController {
     private CarritoService carritoService;
 
     // agregar un producto al carrito
+    @Operation(summary = "Agregar un producto al carrito", description = "Agrega distintos productos al carrito de compras.")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "Operacion realizada con exito"),
+        @ApiResponse(responseCode = "400", description = "Datos invalidos"),
+        @ApiResponse(responseCode = "404", description = "Carrito no encontrado"),
+        @ApiResponse(responseCode = "500", description = "Error interno del servidor")
+    })
     @PostMapping("/agregar")
     public ResponseEntity<CarritoResponse> agregarProducto(@Valid @RequestBody CarritoRequest request) {
         CarritoResponse response = carritoService.agregarProducto(request);
@@ -31,6 +43,13 @@ public class CarritoController {
     }
 
     // obtener el carrito activo de un usuario específico
+    @Operation(summary = "Obtener carrito activo de un usuario en especifico", description = "Muestra el carrito de un usuario/cliente.")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "Operacion realizada con exito"),
+        @ApiResponse(responseCode = "400", description = "Datos invalidos"),
+        @ApiResponse(responseCode = "404", description = "Carrito no encontrado"),
+        @ApiResponse(responseCode = "500", description = "Error interno del servidor")
+    })
     @GetMapping("/usuario/{idUsuario}")
     public ResponseEntity<CarritoResponse> obtenerCarritoActivo(@PathVariable Long idUsuario) {
         CarritoResponse response = carritoService.obtenerCarritoActivo(idUsuario);
@@ -38,6 +57,13 @@ public class CarritoController {
     }
 
     // vaciar carrito
+    @Operation(summary = "Vaciar carrito", description = "Elimina los productos del carrito de compras")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "Operacion realizada con exito"),
+        @ApiResponse(responseCode = "400", description = "Datos invalidos"),
+        @ApiResponse(responseCode = "404", description = "Carrito no encontrado"),
+        @ApiResponse(responseCode = "500", description = "Error interno del servidor")
+    })
     @DeleteMapping("/{carritoId}/limpiar")
     public ResponseEntity<Void> vaciarCarrito(@PathVariable Long carritoId) {
         carritoService.vaciarCarrito(carritoId);
@@ -45,6 +71,13 @@ public class CarritoController {
     }
 
     // confirma la compra (Cambia estado a "COMPRADO")
+    @Operation(summary = "Cambia el estado del carrito", description = "Confirma la compra o la cancelacion de la misma")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "Operacion realizada con exito"),
+        @ApiResponse(responseCode = "400", description = "Datos invalidos"),
+        @ApiResponse(responseCode = "404", description = "Carrito no encontrado"),
+        @ApiResponse(responseCode = "500", description = "Error interno del servidor")
+    })
     @PutMapping("/{carritoId}/confirmar")
     public ResponseEntity<CarritoResponse> confirmarCompra(@PathVariable Long carritoId) {
         CarritoResponse response = carritoService.confirmarCompra(carritoId);
