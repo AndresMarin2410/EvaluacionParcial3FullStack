@@ -31,5 +31,4 @@ public class Categoria {
 
     @Column(name="fecha_creacion",nullable = false)
     private LocalDateTime fechaCreacion;
-
 }
