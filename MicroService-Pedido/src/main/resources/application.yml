@@ -18,6 +18,10 @@ spring:
 
   flyway:
     enabled: true
+eureka:
+  client:
+    service-url:
+      defaultZone: ${EUREKA_URL:http://localhost:8761/eureka/}
 
 server:
   port: 8086
@@ -31,4 +35,4 @@ springdoc:
 
 usuario:
   service:
-    url: http://localhost:8081/v1/usuarios
+    url: ${GATEWAY_URL:http://localhost:8080}/v1/usuarios
