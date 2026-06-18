@@ -3,9 +3,10 @@ spring:
     name: MicroService-Usuario
 
   datasource:
-    url: jdbc:mysql://localhost:3306/db_usuario
+    url: jdbc:mysql://root:JIdSwNcloEGImsbwdjEAOBkdHUgoadwl@thomas.proxy.rlwy.net:56309/railway
     username: root
-    password:
+    password: JIdSwNcloEGImsbwdjEAOBkdHUgoadwl
+    driver-class-name: com.mysql.cj.jdbc.Driver
 
   jpa:
     hibernate:

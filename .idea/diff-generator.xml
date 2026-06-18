@@ -2,6 +2,6 @@
 <project version="4">
   <component name="DiffGenerationConfig">
     <option name="snapshotDb" value="false" />
-    <option name="snapshotModelValue" value="MicroService-Pagos:MicroService-Pagos" />
+    <option name="snapshotModelValue" value="MicroService-Envio:MicroService-Envio" />
   </component>
 </project>

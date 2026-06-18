@@ -11,7 +11,7 @@ public class SwaggerConfig {
     @Bean
     public OpenAPI customOpenApi() {
         return new OpenAPI().info(new Info()
-                .title("API 2026 CATEGORIA")
+                .title("API 2026 Categoria")
                 .version("1.0")
                 .description("Documentacion de la API para categoria"));
     }

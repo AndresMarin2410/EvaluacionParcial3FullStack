@@ -3,9 +3,11 @@ spring:
     name: MicroService-Categoria
 
   datasource:
-    url: jdbc:mysql://localhost:3306/db_categoria
+
+    url: jdbc:mysql://thomas.proxy.rlwy.net:56309/railway
     username: root
-    password:
+    password: JIdSwNcloEGImsbwdjEAOBkdHUgoadwl
+    driver-class-name: com.mysql.cj.jdbc.Driver
 
   jpa:
     hibernate:
@@ -18,6 +20,14 @@ spring:
 
   flyway:
     enabled: true
+    ignore-migration-patterns: "*:*"
+
+eureka:
+  client:
+    register-with-eureka: true
+    fetch-registry: true
+    service-url:
+      defaultZone: ${EUREKA_URL:http://localhost:8761/eureka/}
 
 server:
   port: 8082

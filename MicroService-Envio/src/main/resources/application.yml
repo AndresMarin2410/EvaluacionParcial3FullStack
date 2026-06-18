@@ -3,9 +3,10 @@ spring:
     name: MicroService-Envio
 
   datasource:
-    url: jdbc:mysql://localhost:3306/db_envio
+    url: jdbc:mysql://thomas.proxy.rlwy.net:56309/railway
     username: root
-    password:
+    password: JIdSwNcloEGImsbwdjEAOBkdHUgoadwl
+    driver-class-name: com.mysql.cj.jdbc.Driver
 
   jpa:
     hibernate:
@@ -18,6 +19,8 @@ spring:
 
   flyway:
     enabled: true
+    ignore-migration-patterns: "*:*"
+
 eureka:
   client:
     service-url:
@@ -35,8 +38,8 @@ springdoc:
 
 usuario:
   service:
-    url: ${GATEWAY_URL:http://localhost:8080}/v1/usuarios
+    url: http://localhost:8081/v1/usuarios
 
 pedido:
   service:
-    url: ${GATEWAY_URL:http://localhost:8080}/v1/pedidos
+    url: http://localhost:8086/v1/pedidos

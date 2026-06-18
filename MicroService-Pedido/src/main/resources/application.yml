@@ -3,9 +3,10 @@ spring:
     name: MicroService-Pedido
 
   datasource:
-    url: jdbc:mysql://localhost:3306/db_pedido
+    url: jdbc:mysql://thomas.proxy.rlwy.net:56309/railway
     username: root
-    password:
+    password: JIdSwNcloEGImsbwdjEAOBkdHUgoadwl
+    driver-class-name: com.mysql.cj.jdbc.Driver
 
   jpa:
     hibernate:
@@ -18,10 +19,14 @@ spring:
 
   flyway:
     enabled: true
+    ignore-migration-patterns: "*:*"
+
 eureka:
   client:
     service-url:
       defaultZone: ${EUREKA_URL:http://localhost:8761/eureka/}
+    register-with-eureka: true
+    fetch-registry: true
 
 server:
   port: 8086
@@ -35,4 +40,4 @@ springdoc:
 
 usuario:
   service:
-    url: ${GATEWAY_URL:http://localhost:8080}/v1/usuarios
+    url: http://localhost:8081/v1/usuarios
