@@ -85,7 +85,7 @@ public class UsuarioController {
                         .withSelfRel(),
                 linkTo(methodOn(UsuarioController.class)
                         .obtenerUsuarios())
-                        .withRel("usuarios"),
+                        .withRel("Listar usuarios"),
                 linkTo(methodOn(UsuarioController.class)
                         .buscarUsuarioPorRun(dto.getRun()))
                         .withRel("buscar-usuario-por-run")
