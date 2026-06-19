@@ -22,6 +22,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/v1/usuarios")
+@CrossOrigin(origins = "*")
 @Slf4j
 @Tag(name = "Usuarios", description = "Operaciones relacionadas con los usuarios")
 public class UsuarioController {
