@@ -3,7 +3,6 @@ package cl.EvaluacionParcial3.MicroService_Usuario.Controller;
 import cl.EvaluacionParcial3.MicroService_Usuario.Dto.UsuarioRequest;
 import cl.EvaluacionParcial3.MicroService_Usuario.Dto.UsuarioResponse;
 import cl.EvaluacionParcial3.MicroService_Usuario.Dto.UsuarioUpdateRequest;
-import cl.EvaluacionParcial3.MicroService_Usuario.Model.Usuario;
 import cl.EvaluacionParcial3.MicroService_Usuario.Service.UsuarioService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -14,11 +13,16 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.hateoas.CollectionModel;
+import org.springframework.hateoas.EntityModel;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
 @RestController
 @RequestMapping("/v1/usuarios")
@@ -36,9 +40,30 @@ public class UsuarioController {
             @ApiResponse(responseCode = "200", description = "Operacion realizada con exito"),
             @ApiResponse(responseCode = "500", description = "Error interno del servidor")
     })
-    public List<Usuario> listarUsuarios() {
-        log.info("GET /api/usuarios/listarUsuarios");
-        return usuarioService.buscarUsuarios();
+    public CollectionModel<EntityModel<UsuarioResponse>> obtenerUsuarios() {
+        log.info("Listando todos los usuarios registrados.");
+        List<EntityModel<UsuarioResponse>> usuarios = usuarioService.buscarUsuarios().stream()
+                .map(usuario -> {
+
+                    UsuarioResponse dto = UsuarioResponse.builder()
+                            .id(usuario.getId())
+                            .run(usuario.getRun())
+                            .nombre(usuario.getNombre())
+                            .apellido(usuario.getApellido())
+                            .fechaNac(usuario.getFechaNac())
+                            .correo(usuario.getCorreo())
+                            .direccion(usuario.getDireccion())
+                            .build();
+                    return EntityModel.of(dto, linkTo(methodOn(UsuarioController.class)
+                            .buscarUsuarioPorId(dto.getId()))
+                            .withSelfRel());
+                })
+                .toList();
+
+        return CollectionModel.of(usuarios, linkTo(methodOn(UsuarioController.class)
+                .obtenerUsuarios())
+                .withSelfRel()
+        );
     }
 
     //BUSCAR USUARIO POR ID
