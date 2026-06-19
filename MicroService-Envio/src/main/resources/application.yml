@@ -3,9 +3,9 @@ spring:
     name: MicroService-Envio
 
   datasource:
-    url: jdbc:mysql://thomas.proxy.rlwy.net:56309/railway
+    url: jdbc:mysql://thomas.proxy.rlwy.net:35855/railway
     username: root
-    password: JIdSwNcloEGImsbwdjEAOBkdHUgoadwl
+    password: xIbrJlrixuUvFYxVcBRhvtIJFNjtPBLW
     driver-class-name: com.mysql.cj.jdbc.Driver
 
   jpa:
@@ -38,7 +38,7 @@ springdoc:
 
 usuario:
   service:
-    url: http://localhost:8081/v1/usuarios
+    url: https://evaluacionparcial3fullstack-production.up.railway.app/v1/usuarios
 
 pedido:
   service:
