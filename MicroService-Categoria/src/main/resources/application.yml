@@ -1,0 +1,40 @@
+spring:
+  application:
+    name: MicroService-Categoria
+
+  datasource:
+
+    url: jdbc:mysql://thomas.proxy.rlwy.net:35855/railway
+    username: root
+    password: xIbrJlrixuUvFYxVcBRhvtIJFNjtPBLW
+    driver-class-name: com.mysql.cj.jdbc.Driver
+
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+        dialect: org.hibernate.dialect.MySQLDialect
+
+  flyway:
+    enabled: true
+    ignore-migration-patterns: "*:*"
+
+eureka:
+  client:
+    register-with-eureka: true
+    fetch-registry: true
+    service-url:
+      defaultZone: ${EUREKA_URL:http://localhost:8761/eureka/}
+
+server:
+  port: 8082
+
+springdoc:
+  api-docs:
+    enabled: true
+  swagger-ui:
+    enabled: true
+    path: /categoria/swagger-ui.html

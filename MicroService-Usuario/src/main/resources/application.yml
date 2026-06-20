@@ -3,9 +3,10 @@ spring:
     name: MicroService-Usuario
 
   datasource:
-    url: jdbc:mysql://localhost:3306/db_usuario
-    username: root
-    password:
+    url: jdbc:${DATABASE_URL}
+    username: ${MYSQLUSER}
+    password: ${MYSQLPASSWORD}
+    driver-class-name: com.mysql.cj.jdbc.Driver
 
   jpa:
     hibernate:
@@ -19,8 +20,13 @@ spring:
   flyway:
     enabled: true
 
+eureka:
+  client:
+    service-url:
+      defaultZone: ${EUREKA_URL:http://localhost:8761/eureka/}
+
 server:
-  port: 8081
+  port: ${PORT:8081}
 
 springdoc:
   api-docs:

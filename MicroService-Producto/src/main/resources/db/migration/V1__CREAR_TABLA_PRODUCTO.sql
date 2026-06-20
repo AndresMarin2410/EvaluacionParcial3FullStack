@@ -1,4 +1,4 @@
-CREATE TABLE IF NOT EXIST producto (
+CREATE TABLE IF NOT EXISTS producto (
     id BIGINT AUTO_INCREMENT PRIMARY KEY,
     nombre VARCHAR(150) NOT NULL,
     descripcion TEXT,

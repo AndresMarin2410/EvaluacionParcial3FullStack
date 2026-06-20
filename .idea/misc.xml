@@ -14,6 +14,8 @@
         <option value="$PROJECT_DIR$/MicroService-Categoria/pom.xml" />
         <option value="$PROJECT_DIR$/MicroService-Inventario/pom.xml" />
         <option value="$PROJECT_DIR$/MicroService-Notificacion/pom.xml" />
+        <option value="$PROJECT_DIR$/Api-Gateway/pom.xml" />
+        <option value="$PROJECT_DIR$/Eureka-Server/pom.xml" />
       </list>
     </option>
   </component>

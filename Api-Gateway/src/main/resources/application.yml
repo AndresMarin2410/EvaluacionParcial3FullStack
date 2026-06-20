@@ -1,0 +1,70 @@
+spring:
+  application:
+    name: Api-Gateway
+
+  cloud:
+    gateway:
+      discovery:
+        locator:
+          enabled: true
+      server:
+        webmvc:
+          routes:
+            # 1. Carrito
+            - id: MicroService-Carrito
+              uri: lb://MicroService-Carrito
+              predicates:
+                - Path=/api/carrito/**
+
+            # 2. Categoria
+            - id: MicroService-Categoria
+              uri: lb://MicroService-Categoria
+              predicates:
+                - Path=/api/categorias/**
+
+            # 3. Envio
+            - id: MicroService-Envio
+              uri: lb://MicroService-Envio
+              predicates:
+                - Path=/v1/envios/**
+
+            # 4. Inventario
+            - id: MicroService-Inventario
+              uri: lb://MicroService-Inventario
+              predicates:
+                - Path=/v1/inventario/**
+
+            # 5. Pagos
+            - id: MicroService-Pagos
+              uri: lb://MicroService-Pagos
+              predicates:
+                - Path=/v1/pagos/**
+
+            # 6. Pedido
+            - id: MicroService-Pedido
+              uri: lb://MicroService-Pedido
+              predicates:
+                - Path=/v1/pedidos/**
+
+            # 7. Producto
+            - id: MicroService-Producto
+              uri: lb://MicroService-Producto
+              predicates:
+                - Path=/api/productos/**
+
+            # 8. Usuario
+            - id: MicroService-Usuario
+              uri: lb://MicroService-Usuario
+              predicates:
+                - Path=/v1/usuarios/**
+            # Falta el de Notificacion y Reporte
+
+eureka:
+  client:
+    register-with-eureka: false
+    fetch-registry: true
+    service-url:
+      defaultZone: ${EUREKA_URL:http://localhost:8761/eureka/}
+
+server:
+  port: ${PORT:8080}
