@@ -28,3 +28,10 @@ springdoc:
   swagger-ui:
     enabled: true
     path: /reporte/swagger-ui.html
+
+eureka:
+  client:
+    register-with-eureka: true
+    fetch-registry: true
+    service-url:
+      defaultZone: ${EUREKA_URL:http://localhost:8761/eureka/}
