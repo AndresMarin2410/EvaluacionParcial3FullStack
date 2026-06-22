@@ -57,7 +57,17 @@ spring:
               uri: lb://MicroService-Usuario
               predicates:
                 - Path=/v1/usuarios/**
-            # Falta el de Notificacion y Reporte
+            # 9. Notificacion
+            - id: MicroService-Notificacion
+              uri: lb://MicroService-Notificacion
+              predicates:
+                - Path=/api/notificaciones/**
+
+            # 10. Reporte
+            - id: MicroService-Reporte
+              uri: lb://MicroService-Reporte
+              predicates:
+                - Path=/api/reportes/**
 
 eureka:
   client:
