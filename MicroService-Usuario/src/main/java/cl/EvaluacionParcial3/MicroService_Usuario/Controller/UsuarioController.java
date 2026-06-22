@@ -3,7 +3,6 @@ package cl.EvaluacionParcial3.MicroService_Usuario.Controller;
 import cl.EvaluacionParcial3.MicroService_Usuario.Dto.UsuarioRequest;
 import cl.EvaluacionParcial3.MicroService_Usuario.Dto.UsuarioResponse;
 import cl.EvaluacionParcial3.MicroService_Usuario.Dto.UsuarioUpdateRequest;
-import cl.EvaluacionParcial3.MicroService_Usuario.Model.Usuario;
 import cl.EvaluacionParcial3.MicroService_Usuario.Service.UsuarioService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -14,14 +13,20 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.hateoas.CollectionModel;
+import org.springframework.hateoas.EntityModel;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
+
 @RestController
 @RequestMapping("/v1/usuarios")
+@CrossOrigin(origins = "*")
 @Slf4j
 @Tag(name = "Usuarios", description = "Operaciones relacionadas con los usuarios")
 public class UsuarioController {
@@ -35,9 +40,29 @@ public class UsuarioController {
             @ApiResponse(responseCode = "200", description = "Operacion realizada con exito"),
             @ApiResponse(responseCode = "500", description = "Error interno del servidor")
     })
-    public List<Usuario> listarUsuarios() {
-        log.info("GET /api/usuarios/listarUsuarios");
-        return usuarioService.buscarUsuarios();
+    public CollectionModel<EntityModel<UsuarioResponse>> obtenerUsuarios() {
+        log.info("Listando todos los usuarios registrados.");
+        List<EntityModel<UsuarioResponse>> usuarios = usuarioService.buscarUsuarios().stream()
+                .map(usuario -> {
+                    UsuarioResponse dto = UsuarioResponse.builder()
+                            .id(usuario.getId())
+                            .run(usuario.getRun())
+                            .nombre(usuario.getNombre())
+                            .apellido(usuario.getApellido())
+                            .fechaNac(usuario.getFechaNac())
+                            .correo(usuario.getCorreo())
+                            .direccion(usuario.getDireccion())
+                            .build();
+                    return EntityModel.of(dto, linkTo(methodOn(UsuarioController.class)
+                            .buscarUsuarioPorId(dto.getId()))
+                            .withSelfRel());
+                })
+                .toList();
+
+        return CollectionModel.of(usuarios, linkTo(methodOn(UsuarioController.class)
+                .obtenerUsuarios())
+                .withSelfRel()
+        );
     }
 
     //BUSCAR USUARIO POR ID
@@ -45,12 +70,25 @@ public class UsuarioController {
     @Operation(summary = "Obtener usuario por ID", description = "Obtiene un usuario mediante su ID")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Operacion realizada con exito"),
-            @ApiResponse(responseCode = "404", description = "Usuario no encontrada"),
+            @ApiResponse(responseCode = "404", description = "Usuario no encontrado"),
             @ApiResponse(responseCode = "500", description = "Error interno del servidor")
     })
-    public UsuarioResponse buscarUsuarioPorId(@PathVariable Long id) {
-        log.info("GET /api/usuarios/buscarUsuarioPorId/{}", id);
-        return usuarioService.buscarPorId(id);
+    public EntityModel<UsuarioResponse> buscarUsuarioPorId(@PathVariable Long id) {
+        log.info("Obtener usuario por ID: {}", id);
+
+        UsuarioResponse dto = usuarioService.buscarPorId(id);
+
+        return EntityModel.of( dto,
+                linkTo(methodOn(UsuarioController.class)
+                        .buscarUsuarioPorId(id))
+                        .withSelfRel(),
+                linkTo(methodOn(UsuarioController.class)
+                        .obtenerUsuarios())
+                        .withRel("listar-usuarios"),
+                linkTo(methodOn(UsuarioController.class)
+                        .buscarUsuarioPorRun(dto.getRun()))
+                        .withRel("buscar-usuario-por-run")
+        );
     }
 
     //BUSCAR USUARIO POR RUN
@@ -58,12 +96,27 @@ public class UsuarioController {
     @Operation(summary = "Obtener usuario por RUN", description = "Obtiene un usuario mediante su RUN")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Operacion realizada con exito"),
-            @ApiResponse(responseCode = "404", description = "Usuario no encontrada"),
+            @ApiResponse(responseCode = "404", description = "Usuario no encontrado"),
             @ApiResponse(responseCode = "500", description = "Error interno del servidor")
     })
-    public UsuarioResponse buscarUsuarioPorRun(@PathVariable String run) {
-        log.info("GET /api/usuarios/buscarUsuarioPorRun/{}", run);
-        return usuarioService.buscarPorRun(run);
+    public EntityModel<UsuarioResponse> buscarUsuarioPorRun(@PathVariable String run) {
+        log.info("Obtener usuario por RUN: {}", run);
+
+        UsuarioResponse dto = usuarioService.buscarPorRun(run);
+
+        return EntityModel.of(dto,
+                linkTo(methodOn(UsuarioController.class)
+                        .buscarUsuarioPorRun(run))
+                        .withSelfRel(),
+
+                linkTo(methodOn(UsuarioController.class)
+                .buscarUsuarioPorId(dto.getId()))
+                .withRel("buscar-usuario-por-id"),
+
+                linkTo(methodOn(UsuarioController.class)
+                .obtenerUsuarios())
+                .withRel("listar-usuarios")
+        );
     }
 
     //CREAR NUEVO USUARIO

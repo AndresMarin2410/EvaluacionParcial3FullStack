@@ -3,9 +3,9 @@ spring:
     name: MicroService-Inventario
 
   datasource:
-    url: jdbc:mysql://thomas.proxy.rlwy.net:56309/railway
+    url: jdbc:mysql://thomas.proxy.rlwy.net:35855/railway
     username: root
-    password: JIdSwNcloEGImsbwdjEAOBkdHUgoadwl
+    password: xIbrJlrixuUvFYxVcBRhvtIJFNjtPBLW
     driver-class-name: com.mysql.cj.jdbc.Driver
 
   jpa:

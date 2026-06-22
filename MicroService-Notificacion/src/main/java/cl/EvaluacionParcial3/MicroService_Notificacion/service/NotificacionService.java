@@ -2,8 +2,8 @@ package cl.EvaluacionParcial3.MicroService_Notificacion.service;
 
 import cl.EvaluacionParcial3.MicroService_Notificacion.dto.NotificacionRequestDTO;
 import cl.EvaluacionParcial3.MicroService_Notificacion.dto.NotificacionResponseDTO;
-import cl.EvaluacionParcial3.MicroService_Notificacion.exception.NotificacionNotFoundException;
-import cl.EvaluacionParcial3.MicroService_Notificacion.exception.UsuarioNotFoundException;
+import cl.EvaluacionParcial3.MicroService_Notificacion.exceptions.NotificacionNotFoundException;
+import cl.EvaluacionParcial3.MicroService_Notificacion.exceptions.UsuarioNotFoundException;
 import cl.EvaluacionParcial3.MicroService_Notificacion.model.Notificacion;
 import cl.EvaluacionParcial3.MicroService_Notificacion.model.TipoNotificacion;
 import cl.EvaluacionParcial3.MicroService_Notificacion.repository.NotificacionRepository;

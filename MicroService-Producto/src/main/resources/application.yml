@@ -7,6 +7,8 @@ spring:
     username: root
     password:
 
+    driver-class-name: com.mysql.cj.jdbc.Driver
+
   jpa:
     hibernate:
       ddl-auto: validate
@@ -19,8 +21,14 @@ spring:
   flyway:
     enabled: true
 
+eureka:
+  client:
+    service-url:
+      defaultZone: ${EUREKA_URL:http://localhost:8761/eureka/}
+
 server:
-  port: 8083
+  port: ${PORT:8083}
+  forward-headers-strategy: framework
 
 springdoc:
   api-docs:
@@ -28,3 +36,8 @@ springdoc:
   swagger-ui:
     enabled: true
     path: /producto/swagger-ui.html
+
+microservicios:
+  categorias:
+    url: ${CATEGORIAS_URL:http://localhost:8082}
+

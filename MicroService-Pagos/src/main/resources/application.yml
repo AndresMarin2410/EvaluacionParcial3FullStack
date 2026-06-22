@@ -3,9 +3,10 @@ spring:
     name: MicroService-Pagos
 
   datasource:
-    url: jdbc:mysql://localhost:3306/db_pagos
+    url: jdbc:mysql://thomas.proxy.rlwy.net:35855/railway
     username: root
-    password:
+    password: xIbrJlrixuUvFYxVcBRhvtIJFNjtPBLW
+    driver-class-name: com.mysql.cj.jdbc.Driver
 
   jpa:
     hibernate:
