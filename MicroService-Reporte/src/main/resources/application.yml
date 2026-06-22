@@ -3,9 +3,10 @@ spring:
     name: MicroService-Reporte
 
   datasource:
-    url: jdbc:mysql://localhost:3306/db_reporte
+    url: jdbc:mysql://thomas.proxy.rlwy.net:35855/railway
     username: root
-    password:
+    password: xIbrJlrixuUvFYxVcBRhvtIJFNjtPBLW
+    driver-class-name: com.mysql.cj.jdbc.Driver
 
   jpa:
     hibernate:
@@ -18,6 +19,7 @@ spring:
 
   flyway:
     enabled: true
+    validate-on-migrate: false
 
 server:
   port: 8090
