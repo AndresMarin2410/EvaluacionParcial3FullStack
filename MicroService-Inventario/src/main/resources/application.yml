@@ -40,4 +40,4 @@ springdoc:
 
 microservicios:
   productos:
-    url: http://localhost:8085/v1/productos
+    url: ${PRODUCTO_URL:http://localhost:8083/v1/productos}

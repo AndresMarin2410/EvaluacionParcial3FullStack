@@ -1,5 +1,5 @@
 services:
-
+ 
   # ───────────────────────── Eureka ─────────────────────────
   eureka-server:
     build: ./Eureka-Server
@@ -9,7 +9,7 @@ services:
       - "8761:8761"
     networks:
       - backend
-
+ 
   # ───────────────────────── API Gateway ─────────────────────────
   api-gateway:
     build: ./Api-Gateway
@@ -23,7 +23,7 @@ services:
       - eureka-server
     networks:
       - backend
-
+ 
   # ───────────────────────── Usuario ─────────────────────────
   microservice-usuario:
     build: ./MicroService-Usuario
@@ -31,10 +31,9 @@ services:
     restart: unless-stopped
     environment:
       EUREKA_URL: http://eureka-server:8761/eureka/
-      PORT: 8081
-      DATABASE_URL: mysql://host.docker.internal:3306/db_usuario
-      MYSQLUSER: root
-      MYSQLPASSWORD: ""
+      SPRING_DATASOURCE_URL: jdbc:mysql://host.docker.internal:3306/db_usuario
+      SPRING_DATASOURCE_USERNAME: root
+      SPRING_DATASOURCE_PASSWORD: ""
     ports:
       - "8081:8081"
     depends_on:
@@ -43,7 +42,7 @@ services:
       - "host.docker.internal:host-gateway"
     networks:
       - backend
-
+ 
   # ───────────────────────── Categoria ─────────────────────────
   microservice-categoria:
     build: ./MicroService-Categoria
@@ -62,7 +61,7 @@ services:
       - "host.docker.internal:host-gateway"
     networks:
       - backend
-
+ 
   # ───────────────────────── Producto ─────────────────────────
   microservice-producto:
     build: ./MicroService-Producto
@@ -83,7 +82,7 @@ services:
       - "host.docker.internal:host-gateway"
     networks:
       - backend
-
+ 
   # ───────────────────────── Inventario ─────────────────────────
   microservice-inventario:
     build: ./MicroService-Inventario
@@ -104,7 +103,7 @@ services:
       - "host.docker.internal:host-gateway"
     networks:
       - backend
-
+ 
   # ───────────────────────── Carrito ─────────────────────────
   microservice-carrito:
     build: ./MicroService-Carrito
@@ -115,6 +114,8 @@ services:
       SPRING_DATASOURCE_URL: jdbc:mysql://host.docker.internal:3306/db_carrito
       SPRING_DATASOURCE_USERNAME: root
       SPRING_DATASOURCE_PASSWORD: ""
+      # La propiedad se llama "productos" pero en realidad valida contra Usuario (confirmado)
+      MICROSERVICIOS_PRODUCTOS_URL: http://microservice-usuario:8081
     ports:
       - "8085:8085"
     depends_on:
@@ -123,7 +124,7 @@ services:
       - "host.docker.internal:host-gateway"
     networks:
       - backend
-
+ 
   # ───────────────────────── Pedido ─────────────────────────
   microservice-pedido:
     build: ./MicroService-Pedido
@@ -143,7 +144,7 @@ services:
       - "host.docker.internal:host-gateway"
     networks:
       - backend
-
+ 
   # ───────────────────────── Pagos ─────────────────────────
   microservice-pagos:
     build: ./MicroService-Pagos
@@ -163,7 +164,7 @@ services:
       - "host.docker.internal:host-gateway"
     networks:
       - backend
-
+ 
   # ───────────────────────── Envio ─────────────────────────
   microservice-envio:
     build: ./MicroService-Envio
@@ -176,8 +177,6 @@ services:
       SPRING_DATASOURCE_PASSWORD: ""
       USUARIO_SERVICE_URL: http://microservice-usuario:8081/v1/usuarios
       PEDIDO_SERVICE_URL: http://microservice-pedido:8086/v1/pedidos
-      # OJO: confirma con tu compañero que ya corrigió flyway.url/user/password
-      # en este yml para que también apunten a local y no a Railway.
     ports:
       - "8088:8088"
     depends_on:
@@ -186,7 +185,7 @@ services:
       - "host.docker.internal:host-gateway"
     networks:
       - backend
-
+ 
   # ───────────────────────── Notificacion ─────────────────────────
   microservice-notificacion:
     build: ./MicroService-Notificacion
@@ -197,6 +196,7 @@ services:
       SPRING_DATASOURCE_URL: jdbc:mysql://host.docker.internal:3306/db_notificacion
       SPRING_DATASOURCE_USERNAME: root
       SPRING_DATASOURCE_PASSWORD: ""
+      USUARIOS_SERVICE_URL: http://microservice-usuario:8081
     ports:
       - "8089:8089"
     depends_on:
@@ -205,7 +205,7 @@ services:
       - "host.docker.internal:host-gateway"
     networks:
       - backend
-
+ 
   # ───────────────────────── Reporte ─────────────────────────
   microservice-reporte:
     build: ./MicroService-Reporte
@@ -224,7 +224,7 @@ services:
       - "host.docker.internal:host-gateway"
     networks:
       - backend
-
+ 
 networks:
   backend:
     driver: bridge

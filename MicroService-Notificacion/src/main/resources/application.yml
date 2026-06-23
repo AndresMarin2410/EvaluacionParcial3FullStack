@@ -36,3 +36,7 @@ eureka:
     fetch-registry: true
     service-url:
       defaultZone: ${EUREKA_URL:http://localhost:8761/eureka/}
+
+microservicios:
+  usuarios:
+    url: ${USUARIOS_SERVICE_URL:http://localhost:8081}
