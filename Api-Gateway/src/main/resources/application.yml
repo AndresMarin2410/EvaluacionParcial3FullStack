@@ -9,6 +9,10 @@ spring:
           enabled: true
       server:
         webmvc:
+          trusted-proxies: .*
+          discovery:
+            locator:
+              enabled: true
           routes:
             # 1. Carrito
             - id: MicroService-Carrito
