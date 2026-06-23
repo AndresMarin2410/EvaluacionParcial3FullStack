@@ -1,3 +1,0 @@
-Link de Railway del microservicio Usuario
-
-https://evaluacionparcial3fullstack-production.up.railway.app/usuario/swagger-ui/index.html
