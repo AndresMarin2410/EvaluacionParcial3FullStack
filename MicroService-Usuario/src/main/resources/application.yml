@@ -33,6 +33,7 @@ eureka:
 
 server:
   port: ${PORT:8081}
+  forward-headers-strategy: framework
 
 springdoc:
   api-docs:
@@ -40,3 +41,4 @@ springdoc:
   swagger-ui:
     enabled: true
     path: /usuario/swagger-ui.html
+  use-management-port: false
