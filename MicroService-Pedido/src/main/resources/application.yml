@@ -41,4 +41,4 @@ springdoc:
 
 usuario:
   service:
-    url: https://evaluacionparcial3fullstack-production.up.railway.app/v1/usuarios
+    url: http://localhost:8081/v1/usuarios
