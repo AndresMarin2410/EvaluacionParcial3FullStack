@@ -19,6 +19,9 @@ spring:
 
   flyway:
     enabled: true
+    url: ${DATABASE_URL}
+    user: ${DATABASE_USERNAME}
+    password: ${DATABASE_PASSWORD}
 
 eureka:
   client:
