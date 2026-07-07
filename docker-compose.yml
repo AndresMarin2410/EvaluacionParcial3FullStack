@@ -1,5 +1,26 @@
 services:
- 
+
+  # ───────────────────────── MySQL ─────────────────────────
+  mysql-db:
+    image: mysql:8.0
+    container_name: mysql-db
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+    ports:
+      - "3308:3306"
+    volumes:
+      - mysql-data:/var/lib/mysql
+      - ./init-databases.sql:/docker-entrypoint-initdb.d/init-databases.sql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-uroot", "-proot"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 30s
+    networks:
+      - backend
+
   # ───────────────────────── Eureka ─────────────────────────
   eureka-server:
     build: ./Eureka-Server
@@ -15,7 +36,7 @@ services:
       start_period: 30s
     networks:
       - backend
- 
+
   # ───────────────────────── API Gateway ─────────────────────────
   api-gateway:
     build: ./Api-Gateway
@@ -29,7 +50,7 @@ services:
       - eureka-server
     networks:
       - backend
- 
+
   # ───────────────────────── Usuario ─────────────────────────
   microservice-usuario:
     build: ./MicroService-Usuario
@@ -37,18 +58,19 @@ services:
     restart: unless-stopped
     environment:
       EUREKA_URL: http://eureka-server:8761/eureka/
-      SPRING_DATASOURCE_URL: jdbc:mysql://host.docker.internal:3306/db_usuario
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql-db:3306/db_usuario
       SPRING_DATASOURCE_USERNAME: root
-      SPRING_DATASOURCE_PASSWORD: ""
+      SPRING_DATASOURCE_PASSWORD: root
     ports:
       - "8081:8081"
     depends_on:
-      - eureka-server
-    extra_hosts:
-      - "host.docker.internal:host-gateway"
+      eureka-server:
+        condition: service_started
+      mysql-db:
+        condition: service_healthy
     networks:
       - backend
- 
+
   # ───────────────────────── Categoria ─────────────────────────
   microservice-categoria:
     build: ./MicroService-Categoria
@@ -56,18 +78,19 @@ services:
     restart: unless-stopped
     environment:
       EUREKA_URL: http://eureka-server:8761/eureka/
-      SPRING_DATASOURCE_URL: jdbc:mysql://host.docker.internal:3306/db_categoria
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql-db:3306/db_categoria
       SPRING_DATASOURCE_USERNAME: root
-      SPRING_DATASOURCE_PASSWORD: ""
+      SPRING_DATASOURCE_PASSWORD: root
     ports:
       - "8082:8082"
     depends_on:
-      - eureka-server
-    extra_hosts:
-      - "host.docker.internal:host-gateway"
+      eureka-server:
+        condition: service_started
+      mysql-db:
+        condition: service_healthy
     networks:
       - backend
- 
+
   # ───────────────────────── Producto ─────────────────────────
   microservice-producto:
     build: ./MicroService-Producto
@@ -76,19 +99,20 @@ services:
     environment:
       EUREKA_URL: http://eureka-server:8761/eureka/
       PORT: 8083
-      SPRING_DATASOURCE_URL: jdbc:mysql://host.docker.internal:3306/db_producto
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql-db:3306/db_producto
       SPRING_DATASOURCE_USERNAME: root
-      SPRING_DATASOURCE_PASSWORD: ""
+      SPRING_DATASOURCE_PASSWORD: root
       CATEGORIAS_URL: http://microservice-categoria:8082
     ports:
       - "8083:8083"
     depends_on:
-      - eureka-server
-    extra_hosts:
-      - "host.docker.internal:host-gateway"
+      eureka-server:
+        condition: service_started
+      mysql-db:
+        condition: service_healthy
     networks:
       - backend
- 
+
   # ───────────────────────── Inventario ─────────────────────────
   microservice-inventario:
     build: ./MicroService-Inventario
@@ -96,20 +120,21 @@ services:
     restart: unless-stopped
     environment:
       EUREKA_URL: http://eureka-server:8761/eureka/
-      SPRING_DATASOURCE_URL: jdbc:mysql://host.docker.internal:3306/db_inventario
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql-db:3306/db_inventario
       SPRING_DATASOURCE_USERNAME: root
-      SPRING_DATASOURCE_PASSWORD: ""
+      SPRING_DATASOURCE_PASSWORD: root
       # Corrige el bug del yml original (apuntaba a localhost:8085, puerto de Carrito)
       MICROSERVICIOS_PRODUCTOS_URL: http://microservice-producto:8083/v1/productos
     ports:
       - "8084:8084"
     depends_on:
-      - eureka-server
-    extra_hosts:
-      - "host.docker.internal:host-gateway"
+      eureka-server:
+        condition: service_started
+      mysql-db:
+        condition: service_healthy
     networks:
       - backend
- 
+
   # ───────────────────────── Carrito ─────────────────────────
   microservice-carrito:
     build: ./MicroService-Carrito
@@ -117,20 +142,21 @@ services:
     restart: unless-stopped
     environment:
       EUREKA_URL: http://eureka-server:8761/eureka/
-      SPRING_DATASOURCE_URL: jdbc:mysql://host.docker.internal:3306/db_carrito
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql-db:3306/db_carrito
       SPRING_DATASOURCE_USERNAME: root
-      SPRING_DATASOURCE_PASSWORD: ""
+      SPRING_DATASOURCE_PASSWORD: root
       # La propiedad se llama "productos" pero en realidad valida contra Usuario (confirmado)
       MICROSERVICIOS_PRODUCTOS_URL: http://microservice-usuario:8081
     ports:
       - "8085:8085"
     depends_on:
-      - eureka-server
-    extra_hosts:
-      - "host.docker.internal:host-gateway"
+      eureka-server:
+        condition: service_started
+      mysql-db:
+        condition: service_healthy
     networks:
       - backend
- 
+
   # ───────────────────────── Pedido ─────────────────────────
   microservice-pedido:
     build: ./MicroService-Pedido
@@ -138,19 +164,20 @@ services:
     restart: unless-stopped
     environment:
       EUREKA_URL: http://eureka-server:8761/eureka/
-      SPRING_DATASOURCE_URL: jdbc:mysql://host.docker.internal:3306/db_pedido
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql-db:3306/db_pedido
       SPRING_DATASOURCE_USERNAME: root
-      SPRING_DATASOURCE_PASSWORD: ""
+      SPRING_DATASOURCE_PASSWORD: root
       USUARIO_SERVICE_URL: http://microservice-usuario:8081/v1/usuarios
     ports:
       - "8086:8086"
     depends_on:
-      - eureka-server
-    extra_hosts:
-      - "host.docker.internal:host-gateway"
+      eureka-server:
+        condition: service_started
+      mysql-db:
+        condition: service_healthy
     networks:
       - backend
- 
+
   # ───────────────────────── Pagos ─────────────────────────
   microservice-pagos:
     build: ./MicroService-Pagos
@@ -158,19 +185,20 @@ services:
     restart: unless-stopped
     environment:
       EUREKA_URL: http://eureka-server:8761/eureka/
-      SPRING_DATASOURCE_URL: jdbc:mysql://host.docker.internal:3306/db_pagos
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql-db:3306/db_pagos
       SPRING_DATASOURCE_USERNAME: root
-      SPRING_DATASOURCE_PASSWORD: ""
+      SPRING_DATASOURCE_PASSWORD: root
       PEDIDO_SERVICE_URL: http://microservice-pedido:8086/v1/pedidos
     ports:
       - "8087:8087"
     depends_on:
-      - eureka-server
-    extra_hosts:
-      - "host.docker.internal:host-gateway"
+      eureka-server:
+        condition: service_started
+      mysql-db:
+        condition: service_healthy
     networks:
       - backend
- 
+
   # ───────────────────────── Envio ─────────────────────────
   microservice-envio:
     build: ./MicroService-Envio
@@ -178,20 +206,21 @@ services:
     restart: unless-stopped
     environment:
       EUREKA_URL: http://eureka-server:8761/eureka/
-      SPRING_DATASOURCE_URL: jdbc:mysql://host.docker.internal:3306/db_envio
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql-db:3306/db_envio
       SPRING_DATASOURCE_USERNAME: root
-      SPRING_DATASOURCE_PASSWORD: ""
+      SPRING_DATASOURCE_PASSWORD: root
       USUARIO_SERVICE_URL: http://microservice-usuario:8081/v1/usuarios
       PEDIDO_SERVICE_URL: http://microservice-pedido:8086/v1/pedidos
     ports:
       - "8088:8088"
     depends_on:
-      - eureka-server
-    extra_hosts:
-      - "host.docker.internal:host-gateway"
+      eureka-server:
+        condition: service_started
+      mysql-db:
+        condition: service_healthy
     networks:
       - backend
- 
+
   # ───────────────────────── Notificacion ─────────────────────────
   microservice-notificacion:
     build: ./MicroService-Notificacion
@@ -199,19 +228,20 @@ services:
     restart: unless-stopped
     environment:
       EUREKA_URL: http://eureka-server:8761/eureka/
-      SPRING_DATASOURCE_URL: jdbc:mysql://host.docker.internal:3306/db_notificacion
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql-db:3306/db_notificacion
       SPRING_DATASOURCE_USERNAME: root
-      SPRING_DATASOURCE_PASSWORD: ""
+      SPRING_DATASOURCE_PASSWORD: root
       USUARIOS_SERVICE_URL: http://microservice-usuario:8081
     ports:
       - "8089:8089"
     depends_on:
-      - eureka-server
-    extra_hosts:
-      - "host.docker.internal:host-gateway"
+      eureka-server:
+        condition: service_started
+      mysql-db:
+        condition: service_healthy
     networks:
       - backend
- 
+
   # ───────────────────────── Reporte ─────────────────────────
   microservice-reporte:
     build: ./MicroService-Reporte
@@ -219,18 +249,22 @@ services:
     restart: unless-stopped
     environment:
       EUREKA_URL: http://eureka-server:8761/eureka/
-      SPRING_DATASOURCE_URL: jdbc:mysql://host.docker.internal:3306/db_reporte
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql-db:3306/db_reporte
       SPRING_DATASOURCE_USERNAME: root
-      SPRING_DATASOURCE_PASSWORD: ""
+      SPRING_DATASOURCE_PASSWORD: root
     ports:
       - "8090:8090"
     depends_on:
-      - eureka-server
-    extra_hosts:
-      - "host.docker.internal:host-gateway"
+      eureka-server:
+        condition: service_started
+      mysql-db:
+        condition: service_healthy
     networks:
       - backend
- 
+
 networks:
   backend:
     driver: bridge
+
+volumes:
+  mysql-data:
