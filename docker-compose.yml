@@ -1,6 +1,6 @@
 services:
 
-  # ───────────────────────── MySQL ─────────────────────────
+  #MySQL
   mysql-db:
     image: mysql:8.0
     container_name: mysql-db
@@ -21,7 +21,7 @@ services:
     networks:
       - backend
 
-  # ───────────────────────── Eureka ─────────────────────────
+  # Eureka
   eureka-server:
     build: ./Eureka-Server
     container_name: eureka-server
@@ -37,7 +37,7 @@ services:
     networks:
       - backend
 
-  # ───────────────────────── API Gateway ─────────────────────────
+  # API Gateway
   api-gateway:
     build: ./Api-Gateway
     container_name: api-gateway
@@ -51,7 +51,7 @@ services:
     networks:
       - backend
 
-  # ───────────────────────── Usuario ─────────────────────────
+ #Usuario
   microservice-usuario:
     build: ./MicroService-Usuario
     container_name: microservice-usuario
@@ -71,7 +71,7 @@ services:
     networks:
       - backend
 
-  # ───────────────────────── Categoria ─────────────────────────
+  #Categoria
   microservice-categoria:
     build: ./MicroService-Categoria
     container_name: microservice-categoria
@@ -91,7 +91,7 @@ services:
     networks:
       - backend
 
-  # ───────────────────────── Producto ─────────────────────────
+  #Producto
   microservice-producto:
     build: ./MicroService-Producto
     container_name: microservice-producto
@@ -113,7 +113,7 @@ services:
     networks:
       - backend
 
-  # ───────────────────────── Inventario ─────────────────────────
+  #Inventario
   microservice-inventario:
     build: ./MicroService-Inventario
     container_name: microservice-inventario
@@ -123,7 +123,6 @@ services:
       SPRING_DATASOURCE_URL: jdbc:mysql://mysql-db:3306/db_inventario
       SPRING_DATASOURCE_USERNAME: root
       SPRING_DATASOURCE_PASSWORD: root
-      # Corrige el bug del yml original (apuntaba a localhost:8085, puerto de Carrito)
       MICROSERVICIOS_PRODUCTOS_URL: http://microservice-producto:8083/v1/productos
     ports:
       - "8084:8084"
@@ -135,7 +134,7 @@ services:
     networks:
       - backend
 
-  # ───────────────────────── Carrito ─────────────────────────
+  #Carrito
   microservice-carrito:
     build: ./MicroService-Carrito
     container_name: microservice-carrito
@@ -145,7 +144,6 @@ services:
       SPRING_DATASOURCE_URL: jdbc:mysql://mysql-db:3306/db_carrito
       SPRING_DATASOURCE_USERNAME: root
       SPRING_DATASOURCE_PASSWORD: root
-      # La propiedad se llama "productos" pero en realidad valida contra Usuario (confirmado)
       MICROSERVICIOS_PRODUCTOS_URL: http://microservice-usuario:8081
     ports:
       - "8085:8085"
@@ -157,7 +155,7 @@ services:
     networks:
       - backend
 
-  # ───────────────────────── Pedido ─────────────────────────
+  #Pedido
   microservice-pedido:
     build: ./MicroService-Pedido
     container_name: microservice-pedido
@@ -178,7 +176,7 @@ services:
     networks:
       - backend
 
-  # ───────────────────────── Pagos ─────────────────────────
+  #Pagos
   microservice-pagos:
     build: ./MicroService-Pagos
     container_name: microservice-pagos
@@ -199,7 +197,7 @@ services:
     networks:
       - backend
 
-  # ───────────────────────── Envio ─────────────────────────
+  #Envio
   microservice-envio:
     build: ./MicroService-Envio
     container_name: microservice-envio
@@ -221,7 +219,7 @@ services:
     networks:
       - backend
 
-  # ───────────────────────── Notificacion ─────────────────────────
+  #Notificacion
   microservice-notificacion:
     build: ./MicroService-Notificacion
     container_name: microservice-notificacion
@@ -242,7 +240,7 @@ services:
     networks:
       - backend
 
-  # ───────────────────────── Reporte ─────────────────────────
+  #Reporte
   microservice-reporte:
     build: ./MicroService-Reporte
     container_name: microservice-reporte
