@@ -43,5 +43,99 @@ reporte: http://localhost:8080/api/reportes
 2. crear las base de datos
 4.clonar el repositorio de github: git clone https://github.com/AndresMarin2410/EvaluacionParcial3FullStack.git
 5.Comandos Docker
-.\build-all.ps1
+
+Usar esto:
 docker compose up --build
+
+Para verificar la creacion de las base de datos:
+docker exec -it mysql-db mysql -uroot -proot -e "SHOW DATABASES;"
+
+Para ver el estado del docker:
+docker-compose ps
+
+scrip anterior:
+.\build-all.ps1
+
+
+Docker-compose anterior:
+
+services:
+
+  # ───────────────────────── Eureka ─────────────────────────
+  eureka-server:
+    build: ./Eureka-Server
+    container_name: eureka-server
+    restart: unless-stopped
+    ports:
+      - "8761:8761"
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8761/actuator/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+    networks:
+      - backend
+
+  # ───────────────────────── API Gateway ─────────────────────────
+  api-gateway:
+    build: ./Api-Gateway
+    container_name: api-gateway
+    restart: unless-stopped
+    environment:
+      EUREKA_URL: http://eureka-server:8761/eureka/
+    ports:
+      - "8080:8080"
+    depends_on:
+      - eureka-server
+    networks:
+      - backend
+
+  # ───────────────────────── Usuario ─────────────────────────
+  microservice-usuario:
+    build: ./MicroService-Usuario
+    container_name: microservice-usuario
+    restart: unless-stopped
+    environment:
+      EUREKA_URL: http://eureka-server:8761/eureka/
+      SPRING_DATASOURCE_URL: jdbc:mysql://host.docker.internal:3306/db_usuario
+      SPRING_DATASOURCE_USERNAME: root
+      SPRING_DATASOURCE_PASSWORD: ""
+    ports:
+      - "8081:8081"
+    depends_on:
+      - eureka-server
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    networks:
+      - backend
+
+  # ───────────────────────── Categoria ─────────────────────────
+  microservice-categoria:
+    build: ./MicroService-Categoria
+    container_name: microservice-categoria
+    restart: unless-stopped
+    environment:
+      EUREKA_URL: http://eureka-server:8761/eureka/
+      SPRING_DATASOURCE_URL: jdbc:mysql://host.docker.internal:3306/db_categoria
+      SPRING_DATASOURCE_USERNAME: root
+      SPRING_DATASOURCE_PASSWORD: ""
+    ports:
+      - "8082:8082"
+    depends_on:
+      - eureka-server
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    networks:
+      - backend
+
+  # ───────────────────────── Producto ─────────────────────────
+  microservice-producto:
+    build: ./MicroService-Producto
+    container_name: microservice-producto
+    restart: unless-stopped
+    environment:
+      EUREKA_URL: http://eureka-server:8761/eureka/
+      PORT: 8083
+      SPRING_DATASOURCE_URL: jdbc:mysql://host.docker.internal:3306/db_producto
+
